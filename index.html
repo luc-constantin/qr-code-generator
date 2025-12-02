@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>QR Code Generator</title>
+
+    <!-- QR engine (original, via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <style>
+        :root {
+            --brand-blue: #3656e8;
+            --brand-green: #33f078;
+            --text-color: #444;
+            --bg-color: #f4f4f4;
+            --card-bg: #ffffff;
+            --input-border: #ddd;
+            --footer-text: #666;
+        }
+
+        /* Respect system dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #e7e7e7;
+                --bg-color: #111;
+                --card-bg: #1a1a1a;
+                --input-border: #444;
+                --footer-text: #aaa;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-color);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 28px;
+            font-size: 2em;
+            color: var(--text-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 2px solid var(--input-border);
+            font-size: 16px;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+        }
+
+        canvas {
+            margin: 25px auto;
+            border: 1px solid #eee;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            display: block;
+            background: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0 20px;
+            border-radius: 10px;
+            background: var(--brand-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 17px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background: var(--brand-green);
+            color: #000;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.95em;
+            color: var(--footer-text);
+        }
+
+        .footer a {
+            color: var(--brand-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>QR Code Generator</h1>
+
+    <input
+        type="text"
+        id="text"
+        value="https://accolades.dev"
+        placeholder="Enter text or URL..."
+        autofocus
+    />
+
+    <select id="size">
+        <option value="150">Small (150px)</option>
+        <option value="200">Medium (200px)</option>
+        <option value="300">Large (300px)</option>
+        <option value="400" selected>Extra Large (400px)</option>
+    </select>
+
+    <canvas id="qr"></canvas>
+
+    <button id="download" style="display:none;">Download as PNG</button>
+
+    <div class="footer">
+        Demo by <a href="https://accolades.dev" target="_blank">Luc Constantin</a>.
+        Source code on <a href="https://github.com" target="_blank">GitHub</a>
+    </div>
+
+</div>
+
+<script>
+    const inputText = document.getElementById('text');
+    const qrCanvas = document.getElementById('qr');
+    const sizeSelect = document.getElementById('size');
+    const downloadBtn = document.getElementById('download');
+
+    function generateQR () {
+        const text = inputText.value.trim();
+        if (!text) {
+            qrCanvas.width = qrCanvas.height = 1;
+            downloadBtn.style.display = 'none';
+            return;
+        }
+
+        const size = parseInt(sizeSelect.value, 10);
+
+        qrCanvas.width = size;
+        qrCanvas.height = size;
+
+        new QRious({
+            element: qrCanvas,
+            value: text,
+            size: size,
+            padding: 10,
+            background: '#ffffff',
+            foreground: '#000000'
+        });
+
+        downloadBtn.style.display = 'block';
+    }
+
+    let timeout;
+    inputText.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(generateQR, 400);
+    });
+
+    inputText.addEventListener('keypress', event => {
+        if (event.key === 'Enter') generateQR();
+    });
+
+    sizeSelect.addEventListener('change', generateQR);
+
+    downloadBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = qrCanvas.toDataURL('image/png');
+        link.click();
+    });
+
+    window.onload = generateQR;
+</script>
+</body>
+</html>
