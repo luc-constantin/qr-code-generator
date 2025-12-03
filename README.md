@@ -1,4 +1,5 @@
 QR Code Generator
+
 Try the tool here → [QR Code Generator](https://luc-constantin.github.io/qr-code-generator/)
 
 
