@@ -135,9 +135,9 @@
 
     <select id="size">
         <option value="150">Small (150px)</option>
-        <option value="200">Medium (200px)</option>
+        <option value="200" selected>Medium (200px)</option>
         <option value="300">Large (300px)</option>
-        <option value="400" selected>Extra Large (400px)</option>
+        <option value="400">Extra Large (400px)</option>
     </select>
 
     <canvas id="qr"></canvas>
@@ -185,7 +185,7 @@
     let timeout;
     inputText.addEventListener('input', () => {
         clearTimeout(timeout);
-        timeout = setTimeout(generateQR, 200);
+        timeout = setTimeout(generateQR, 400);
     });
 
     inputText.addEventListener('keypress', event => {
