@@ -185,7 +185,7 @@
     let timeout;
     inputText.addEventListener('input', () => {
         clearTimeout(timeout);
-        timeout = setTimeout(generateQR, 400);
+        timeout = setTimeout(generateQR, 200);
     });
 
     inputText.addEventListener('keypress', event => {
