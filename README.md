@@ -1,4 +1,6 @@
 QR Code Generator
+Try the tool here → [QR Code Generator](https://luc-constantin.github.io/qr-code-generator/)
+
 
 A clean, fast and minimal QR Code Generator built using Qrious.js.
 
